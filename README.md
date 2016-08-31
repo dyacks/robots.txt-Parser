@@ -2,4 +2,4 @@
 
 Script checks for file robots.txt in the site
 
-Demo: ppva.16mb.com
+Demo: http://ppva.16mb.com

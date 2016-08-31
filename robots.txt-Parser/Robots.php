@@ -1,15 +1,19 @@
 <?php
 
+/**
+ * Class for parsing robots.txt file
+ * @author Dyachuk Sergey
+ */
+
 class Robots
 {
     private $robotsUrl = '';
     private $content = [];
     private $color = '';
     private $arrHeaders = [];
-    private $stringFile = '';
-    private $derectivehostCount = '0';
+    private $derectivehostCount = 0;
     private $serverCode = '';
-    private $fileSize = '';
+    private $fileSize = 0;
     private $task = [
         'Проверка наличия файла robots.txt',
         'Проверка кода ответа сервера для файла robots.txt',
@@ -47,21 +51,19 @@ class Robots
     public function __construct($url)
     {
         $host = parse_url($url, PHP_URL_HOST);
-
-        if ($host) {
-            $this->robotsUrl = $url . '/robots.txt';
-        }
-
+        if ($host) $this->robotsUrl = $url . '/robots.txt';
         ini_set('display_errors', 'Off');
-        $this->stringFile = file_get_contents($this->robotsUrl);
+        $stringFile = file_get_contents($this->robotsUrl);
         $this->arrHeaders = $http_response_header;
-        $this->content = explode("\n", $this->stringFile);
-        ini_set('display_errors', 'On');
+        $this->content = explode("\n", $stringFile);
         $this->content = array_diff($this->content, array(''));
-
         $this->setServerCode();
     }
 
+    /**
+     * @param string $url
+     * @return int
+     */
     public static function isURL($url)
     {
         $w = "a-z0-9";
@@ -75,76 +77,72 @@ class Robots
         return preg_match($urlPattern, $url);
     }
 
-    public function getContent()
+    /**
+     * @return void
+     */
+    public function setContent()
     {
         $streamInfo = $this->getStreamInfo();
         $this->setFileSize($streamInfo);
         $this->setDerectiveHostCount();
     }
 
+    /**
+     * @param int $i
+     * @return bool
+     */
     public function getStatus($i)
     {
         switch ($i) {
             case 0:
-                if ($this->getCountLineFile() != 0) {
-                    $this->color = 'green';
-                    return true;
-                } else {
-                    $this->color = 'red';
-                    return false;
-                }
-                break;
+                if ($this->getCountLineFile() != 0)
+                    return $this->setColor(true);
+                return $this->setColor();
             case 1:
-                if ($this->getServerCode() == 200) {
-                    $this->color = 'green';
-                    return true;
-                } else {
-                    $this->color = 'red';
-                    return false;
-                }
+                if ($this->getServerCode() == 200)
+                    return $this->setColor(true);
+                return $this->setColor();
             case 2:
-                if (!$this->derectivehostCount == 0) {
-                    $this->color = 'green';
-                    return true;
-                } else {
-                    $this->color = 'red';
-                    return false;
-                }
-                break;
+                if (!$this->derectivehostCount == 0)
+                    return $this->setColor(true);
+                return $this->setColor();
             case 3:
-                if ($this->derectivehostCount == 1) {
-                    $this->color = 'green';
-                    return true;
-                } else {
-                    $this->color = 'red';
-                    return false;
-                }
-                break;
+                if ($this->derectivehostCount == 1)
+                    return $this->setColor(true);
+                return $this->setColor();
             case 4:
-                if ($this->getFileSize() <= 32000) {
-                    $this->color = 'green';
-                    return true;
-                } else {
-                    $this->color = 'red';
-                    return false;
-                }
-                break;
+                if ($this->getFileSize() <= 32000)
+                    return $this->setColor(true);
+                return $this->setColor();
             case 5:
-                if ($this->isDerectiveSitemapPresent()) {
-                    $this->color = 'green';
-                    return true;
-                } else {
-                    $this->color = 'red';
-                    return false;
-                }
+                if ($this->isDerectiveSitemapPresent())
+                    return $this->setColor(true);
+                return $this->setColor();
         }
     }
 
+    /**
+     * @param bool $color
+     * @return bool
+     */
+    public function setColor($color = false)
+    {
+        $this->color = ($color) ? 'green' : 'red';
+        return $color;
+    }
+
+    /**
+     * @param int $i
+     * @return string
+     */
     public function getTask($i)
     {
         return $this->task[$i];
     }
 
+    /**
+     * @return bool
+     */
     public function isDerectiveSitemapPresent()
     {
         foreach ($this->content as $c) {
@@ -155,6 +153,9 @@ class Robots
         return false;
     }
 
+    /**
+     * @return array
+     */
     public function getStreamInfo()
     {
         $fp = fopen($this->robotsUrl, "r");
@@ -163,27 +164,35 @@ class Robots
         return $inf;
     }
 
+    /**
+     * @return void
+     */
     public function setServerCode()
     {
-        $code = get_headers($this->getRobotsURL());
-        foreach ($code as $c) {
-            if (preg_match("/HTTP/", $c)) {
-                $tmp = $c;
-            }
+        foreach ($this->arrHeaders as $c)
+            if (preg_match("/HTTP/", $c)) $tmp = $c;
+        if ($tmp) {
+            $this->serverCode = substr($tmp, 9);
+            $this->falseState[1] = "При обращении к файлу robots.txt сервер возвращает код ответа $this->serverCode";
+            $this->trueState[1] = "Файл robots.txt отдаёт код ответа сервера $this->serverCode";
         }
-        $this->serverCode = substr($tmp, 9);
-        $this->falseState[1] = "При обращении к файлу robots.txt сервер возвращает код ответа $this->serverCode";
-        $this->trueState[1] = "Файл robots.txt отдаёт код ответа сервера $this->serverCode";
     }
 
+    /**
+     * @return string
+     */
     public function getServerCode()
     {
         return $this->serverCode;
     }
 
-    public function setFileSize($infF)
+    /**
+     * @param $inf
+     * @return bool
+     */
+    public function setFileSize($inf)
     {
-        foreach ($infF["wrapper_data"] as $v) {
+        foreach ($inf["wrapper_data"] as $v) {
             if (stristr($v, "content-length")) {
                 $s = explode(":", $v);
                 $this->fileSize = trim($s[1]);
@@ -194,25 +203,39 @@ class Robots
         }
     }
 
+    /**
+     * @return int
+     */
     public function getFileSize()
     {
         return $this->fileSize;
     }
 
+    /**
+     * @return void
+     */
     public function setDerectiveHostCount()
     {
         foreach ($this->content as $c) {
-            if (preg_match_all("/Host:/i", $c)) {
-                $this->derectivehostCount += 1;
+            if (preg_match("/Host:/i", $c)) {
+                $this->derectivehostCount++;
             }
         }
     }
 
+    /**
+     * @return int
+     */
     public function getDerectiveHostCount()
     {
         return $this->derectivehostCount;
     }
 
+    /**
+     * @param int $i
+     * @param bool $status
+     * @return string
+     */
     public function getState($i, $status)
     {
         if ($status) {
@@ -222,6 +245,11 @@ class Robots
         }
     }
 
+    /**
+     * @param int $i
+     * @param bool $status
+     * @return string
+     */
     public function getRecomendet($i, $status)
     {
         if ($status) {
@@ -231,16 +259,25 @@ class Robots
         }
     }
 
+    /**
+     * @return int
+     */
     public function getCountLineFile()
     {
         return count($this->content);
     }
 
+    /**
+     * @return string
+     */
     public function getRobotsURL()
     {
         return $this->robotsUrl;
     }
 
+    /**
+     * @return string
+     */
     public function getColor()
     {
         return $this->color;
