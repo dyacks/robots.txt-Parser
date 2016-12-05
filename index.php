@@ -47,7 +47,7 @@ $controller->$act();
 
 
 
-
+die('-');
 
 require 'Robots.php';
 ?>

@@ -5,8 +5,8 @@
     <title>robots.txt-parser</title>
 </head>
 <body>
-<?php
-die('*');
-?>
+
+<h2>indexView</h2>
+
 </body>
 </html>
