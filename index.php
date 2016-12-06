@@ -47,7 +47,7 @@ $controller->$act();
 
 
 
-die('-');
+die('<hr>');
 
 require 'Robots.php';
 ?>
