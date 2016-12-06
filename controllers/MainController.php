@@ -15,6 +15,7 @@ class MainController {
         var_dump($db->query("SELECT * FROM checkedLinks"));
        // var_dump($db->getAllLinks("SELECT * FROM checkedLinks WHERE id=:id", [':id' => 1]));
 */
-        var_dump(CheckedLinksModel::getOneLinks(2));
+        echo 'id = ' . (CheckedLinksModel::getOneLinks(2));
+        //var_dump(CheckedLinksModel::getAllLinks());
     }
 }
