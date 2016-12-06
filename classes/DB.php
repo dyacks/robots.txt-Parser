@@ -2,13 +2,17 @@
 
 class DB {
 
+    private $dbh;
+
     public function __construct() {
-        $mysqli = new mysqli("localhost", "root", "", "robots");
-        if ($mysqli->connect_errno) {
-            echo "No DB connect: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
-        }
-        $res = mysqli_query($mysqli, "SELECT * FROM checkedLinks");
-        $row = mysqli_fetch_assoc($res);
-        var_dump($row['link']);
+
+        $this->dbh = new PDO('mysql:dbname=robots;host=localhost', 'root', '');
     }
+
+    public function query($sql, $params=[]){
+        $sth = $this->dbh->prepare($sql);
+        $sth->execute($params);
+        return $sth->fetchAll(PDO::FETCH_OBJ);
+    }
+
 }
