@@ -20,4 +20,14 @@ class DB {
         return $sth->fetchAll(PDO::FETCH_CLASS, $this->className);
     }
 
+    /**
+     * @param $sql
+     * @param array $params
+     * @return bool
+     */
+    public function execute($sql, $params=[]){
+        $sth = $this->dbh->prepare($sql);
+        return $sth->execute($params);
+    }
+
 }
