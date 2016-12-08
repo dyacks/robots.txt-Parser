@@ -30,4 +30,11 @@ class DB {
         return $sth->execute($params);
     }
 
+    /**
+     * @return string
+     */
+    public function lastInsertId(){
+        return $this->dbh->lastInsertId();
+    }
+
 }

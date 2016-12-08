@@ -23,8 +23,12 @@ switch (ENVIRONMENT) {
         exit(1);
 }
 
+
 $ctrl = isset($_GET['ctrl']) ? $_GET['ctrl'] : 'Main';
 $act = isset($_GET['act']) ? $_GET['act'] : 'Index';
+
+$ctrl  = $ctrl . 'Controller';
+$act = 'action' . $act;
 
 $controller = new $ctrl;
 $controller->$act();

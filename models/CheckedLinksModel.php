@@ -5,6 +5,7 @@
  *
  * @property $id
  * @property $link
+ * @property $datetime
  */
 class CheckedLinksModel extends AbstractModel{
 
