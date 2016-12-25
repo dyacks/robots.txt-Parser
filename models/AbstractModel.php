@@ -53,7 +53,12 @@ abstract class AbstractModel {
         $sql = 'SELECT * FROM ' . static::$table . ' WHERE id=:id';
         $db = new DB();
         $db->setClassName(get_called_class());
-        return $db->query($sql, [':id' => $id])[0];
+        $res = $db->query($sql, [':id' => $id]);
+        if($res == null){
+            throw new ModelException("No data from this id");
+        }else{
+            return $res[0];
+        }
     }
 
     protected function update(){

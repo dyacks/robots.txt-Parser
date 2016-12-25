@@ -28,7 +28,15 @@ class MainController {
     public function actionUpdate(){
         $id = $_REQUEST['id'];
         $link = $_REQUEST['link'];
-        $checkedLink = CheckedLinksModel::getOneLinks($id);
+        try {
+            $checkedLink = CheckedLinksModel::getOneLinks($id);
+        }catch(ModelException $e){
+            $view = new View();
+            $view->err = $e->getMessage();
+            $view->display('error');
+         //  die('---');
+
+        }
         $checkedLink->link = $link;
         $checkedLink->datetime = date('Y-m-d H:i:s');
         $checkedLink->save();
