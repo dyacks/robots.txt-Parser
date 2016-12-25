@@ -2,15 +2,11 @@
 
 class MainController {
 
-
-    
-    public function actionAddOne(){
+    public function actionGetFromId(){
+        $id = $_REQUEST['id'];
         // Active Record
         $checkedLink = new CheckedLinksModel();
-        $checkedLink->link = "http://www.i.ua";
-        $checkedLink->datetime = date('Y-m-d H:i:s');
-        $checkedLink->insert();
-        echo ($checkedLink->id);
+        var_dump($checkedLink->getOneLinks($id));
     }
 
     public function actionGetAll(){
@@ -19,21 +15,34 @@ class MainController {
         var_dump($checkedLink->getAllLinks());
     }
 
-    public function actionGetFromId($id=1){
+    public function actionAddOne(){
+        $link = $_REQUEST['link'];
         // Active Record
         $checkedLink = new CheckedLinksModel();
-        var_dump($checkedLink->getOneLinks($id));
+        $checkedLink->link = $link;
+        $checkedLink->datetime = date('Y-m-d H:i:s');
+        $checkedLink->save();
+        echo ("ok, id = $checkedLink->id, link = $link");
     }
 
     public function actionUpdate(){
-        $checkedLink = CheckedLinksModel::getOneLinks(2);
-        $checkedLink->link = 'www.meta.ua';
+        $id = $_REQUEST['id'];
+        $link = $_REQUEST['link'];
+        $checkedLink = CheckedLinksModel::getOneLinks($id);
+        $checkedLink->link = $link;
         $checkedLink->datetime = date('Y-m-d H:i:s');
-        $checkedLink->update();
+        $checkedLink->save();
+        echo ("ok, id = $id");
     }
 
     public function actionIndex()
     {
+		/*
+			if (isset($_GET['url'])) {
+				$url       = strtolower($_GET['url']);
+				$id        = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+			}
+		*/
         // $id = $_GET['id'];
         /*
                 $db = new DB;
@@ -44,7 +53,9 @@ class MainController {
         //var_dump(CheckedLinksModel::getAllLinks());
 
         // Active Record
-        echo 'Action Index';
+     //   echo 'Action Index';
+        $view = new View();
+        $view->display('index');
     }
 
 

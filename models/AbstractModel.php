@@ -24,7 +24,7 @@ abstract class AbstractModel {
         return isset($this->data[$key]);
     }
 
-    public function insert(){
+    protected function insert(){
         $cols = array_keys($this->data);
         $ins = []; // data
         // add : in the beginning
@@ -56,7 +56,7 @@ abstract class AbstractModel {
         return $db->query($sql, [':id' => $id])[0];
     }
 
-    public function update(){
+    protected function update(){
         $cols = [];
         $updateData = [];
         foreach ($this->data as $key => $value){
@@ -75,6 +75,14 @@ abstract class AbstractModel {
         '; //die;
         $db = new DB();
         $db->execute($sql, $updateData);
+    }
+    
+    public function save(){
+        if(isset($this->id)){
+            $this->update();
+        } else {
+            $this->insert();
+        }
     }
 
 }

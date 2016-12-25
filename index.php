@@ -45,7 +45,7 @@ $controller->$act();
 
 
 
-die('<hr>');
+die('to be continue ...');
 
 ?>
 
