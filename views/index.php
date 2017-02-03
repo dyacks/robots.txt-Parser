@@ -8,27 +8,27 @@
 
 <h2>indexView</h2>
 
-<form action="index.php" method="get">
+<form action="/main/getFromId/" method="get">
     <p>id: <input type="text" name="id" /></p>
-    <button type="submit" name="act" value="getFromId">getFromId</button>
+    <button type="submit" name="" value="getFromId">getFromId</button>
 </form>
 <hr />
 
-<form action="index.php" method="get">
-    <button type="submit" name="act" value="getAll">getAll</button>
+<form action="/main/getAll/" method="get">
+    <button type="submit" name="" value="getAll">getAll</button>
 </form>
 <hr />
 
-<form action="index.php" method="get">
+<form action="/main/addOne/" method="get">
     <p>new link: <input type="text" name="link" /></p>
-    <button type="submit" name="act" value="addOne">addOne Link</button>
+    <button type="submit" name="" value="addOne">addOne Link</button>
 </form>
 <hr />
 
-<form action="index.php" method="get">
+<form action="/main/update/" method="get">
     <p>id: <input type="text" name="id" /></p>
     <p>new link: <input type="text" name="link" /></p>
-    <button type="submit" name="act" value="update">update</button>
+    <button type="submit" name="" value="update">update</button>
 </form>
 <hr />
 

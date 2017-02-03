@@ -1,5 +1,8 @@
 <?php
 
+namespace App\Classes;
+
+
 class DB {
 
     private $dbh;
@@ -7,7 +10,7 @@ class DB {
 
     public function __construct() {
 
-        $this->dbh = new PDO('mysql:dbname=robots;host=localhost', 'root', '');
+        $this->dbh = new \PDO('mysql:dbname=robots;host=localhost', 'root', '');
     }
 
     public function setClassName($className){
@@ -17,7 +20,7 @@ class DB {
     public function query($sql, $params=[]){
         $sth = $this->dbh->prepare($sql);
         $sth->execute($params);
-        return $sth->fetchAll(PDO::FETCH_CLASS, $this->className);
+        return $sth->fetchAll(\PDO::FETCH_CLASS, $this->className);
     }
 
     /**

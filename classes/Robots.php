@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Classes;
+
 /**
  * Class for parsing robots.txt file
  * @author Dyachuk Sergey

@@ -1,5 +1,7 @@
 <?php
 
+use App\Classes\View;
+
 require_once __DIR__ . '/autoload.php';
 //define('ENVIRONMENT', getenv('ENVIRONMENT'));
 define('ENVIRONMENT', 'development');
@@ -35,18 +37,19 @@ $pathParts = explode('/', $path);
 $ctrl = !empty($pathParts[1]) ? ucfirst($pathParts[1]) : 'Main'; // ucfirst() делает первую букву большой
 $act = !empty($pathParts[2]) ? ucfirst($pathParts[2]) : 'Index';
 
-$controllerClassName  = $ctrl . 'Controller';
+$controllerClassName  = 'App\Controllers\\' . $ctrl . 'Controller';
 
-try{
+//try{
     $controller = new $controllerClassName;
     $method = 'action' . $act;
     $controller->$method();
-
+/*
 } catch (Exception $e){
     $view = new View();
     $view->error = $e->getMessage();
     $view->display('error');
 }
+*/
 
 
 
@@ -68,8 +71,7 @@ try{
 
 
 
-
-    die('to be continue ...');
+    die("<br/> to be continue ...");
 
 ?>
 

@@ -1,47 +1,50 @@
 <?php
 
+namespace App\Controllers;
+
+use App\Models\CheckedLinks;
+use App\Classes\View;
+
 class MainController {
 
     public function actionGetFromId(){
         $id = $_REQUEST['id'];
         // Active Record
         try {
-            $checkedLink = new CheckedLinksModel();
+            $checkedLink = new CheckedLinks();
             var_dump($checkedLink->getOneLinks($id));
         }catch(ModelException $e){
             $view = new View();
-            $view->err = $e->getMessage();
+            $view->error = $e->getMessage();
             $view->display('error');
         }
     }
 
     public function actionGetAll(){
         // Active Record
-        $checkedLink = new CheckedLinksModel();
+        $checkedLink = new CheckedLinks();
         var_dump($checkedLink->getAllLinks());
     }
 
     public function actionAddOne(){
         $link = $_REQUEST['link'];
         // Active Record
-        $checkedLink = new CheckedLinksModel();
+        $checkedLink = new CheckedLinks();
         $checkedLink->link = $link;
         $checkedLink->datetime = date('Y-m-d H:i:s');
-        $checkedLink->save();
-        echo ("ok, id = $checkedLink->id, link = $link");
+        echo $checkedLink->save();
+        echo (", id = $checkedLink->id, link = $link");
     }
 
     public function actionUpdate(){
         $id = $_REQUEST['id'];
         $link = $_REQUEST['link'];
         try {
-            $checkedLink = CheckedLinksModel::getOneLinks($id);
+            $checkedLink = CheckedLinks::getOneLinks($id);
         }catch(ModelException $e){
             $view = new View();
             $view->err = $e->getMessage();
             $view->display('error');
-         //  die('---');
-
         }
         $checkedLink->link = $link;
         $checkedLink->datetime = date('Y-m-d H:i:s');

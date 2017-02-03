@@ -1,5 +1,9 @@
 <?php
 
+namespace App\Models;
+
+use App\Classes\DB;
+
 /**
  * Class AbstractModel
  *
