@@ -23,15 +23,30 @@ switch (ENVIRONMENT) {
         exit(1);
 }
 
-
+/* // working if no ЧПУ
 $ctrl = isset($_GET['ctrl']) ? $_GET['ctrl'] : 'Main';
 $act = isset($_GET['act']) ? $_GET['act'] : 'Index';
+*/
 
-$ctrl  = $ctrl . 'Controller';
-$act = 'action' . $act;
+// add ЧПУ
+$path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH); // узнаём что было в url до rewriteRule / выделяем путь
+$pathParts = explode('/', $path);
 
-$controller = new $ctrl;
-$controller->$act();
+$ctrl = !empty($pathParts[1]) ? ucfirst($pathParts[1]) : 'Main'; // ucfirst() делает первую букву большой
+$act = !empty($pathParts[2]) ? ucfirst($pathParts[2]) : 'Index';
+
+$controllerClassName  = $ctrl . 'Controller';
+
+try{
+    $controller = new $controllerClassName;
+    $method = 'action' . $act;
+    $controller->$method();
+
+} catch (Exception $e){
+    $view = new View();
+    $view->error = $e->getMessage();
+    $view->display('error');
+}
 
 
 
@@ -45,7 +60,16 @@ $controller->$act();
 
 
 
-die('to be continue ...');
+
+
+
+
+
+
+
+
+
+    die('to be continue ...');
 
 ?>
 

@@ -5,8 +5,14 @@ class MainController {
     public function actionGetFromId(){
         $id = $_REQUEST['id'];
         // Active Record
-        $checkedLink = new CheckedLinksModel();
-        var_dump($checkedLink->getOneLinks($id));
+        try {
+            $checkedLink = new CheckedLinksModel();
+            var_dump($checkedLink->getOneLinks($id));
+        }catch(ModelException $e){
+            $view = new View();
+            $view->err = $e->getMessage();
+            $view->display('error');
+        }
     }
 
     public function actionGetAll(){
