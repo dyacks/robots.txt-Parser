@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Classes\DB;
+use App\Classes\ModelException;
 
 /**
  * Class AbstractModel

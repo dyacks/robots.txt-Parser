@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\CheckedLinks;
 use App\Classes\View;
+use App\Classes\ModelException;
 
 class MainController {
 
@@ -12,7 +13,8 @@ class MainController {
         // Active Record
         try {
             $checkedLink = new CheckedLinks();
-            var_dump($checkedLink->getOneLinks($id));
+            $resp = $checkedLink->getOneLinks($id);
+            var_dump($resp);
         }catch(ModelException $e){
             $view = new View();
             $view->error = $e->getMessage();
